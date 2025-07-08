@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sca:composite xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:BW="http://xsd.tns.tibco.com/amf/models/sca/implementationtype/BW" xmlns:XMLSchema="http://www.w3.org/2001/XMLSchema" xmlns:compositeext="http://schemas.tibco.com/amx/3.0/compositeext" xmlns:rest="http://xsd.tns.tibco.com/bw/models/binding/rest" xmlns:sca="http://www.osoa.org/xmlns/sca/1.0" xmlns:scact="http://xsd.tns.tibco.com/amf/models/sca/componentType" xmlns:scaext="http://xsd.tns.tibco.com/amf/models/sca/extensions" xmi:id="_AWm4cKyOEemnEIz6kVJMoQ" targetNamespace="http://tns.tibco.com/bw/composite/MovieCatalogSearch.module" name="MovieCatalogSearch.module" compositeext:version="1.0.0" compositeext:formatVersion="2">
+  <sca:service xmi:id="_Ga-_QKyaEemnEIz6kVJMoQ" name="movies" promote="ComponentProcess/movies">
+    <sca:interface.wsdl xmi:id="_Ga_mUayaEemnEIz6kVJMoQ" interface="http://xmlns.example.com/20190722200552PLT#wsdl.interface(movies)" scaext:wsdlLocation="../Processes/moviecatalogsearch/module/Process.bwp"/>
+    <scaext:binding xsi:type="rest:RestServiceBinding" xmi:id="_GbANYKyaEemnEIz6kVJMoQ" name="RestService" path="/movies" docBasePath="http://localhost:7777/MovieCatalogSearch.module" docResourcePath="Movies" basePath="/" connector="moviecatalogsearch.module.Movies" structuredData="true" technologyVersion="2.0" implementation="Service Descriptors/moviecatalogsearch.module.Process-Movies.json">
+      <operation xmi:id="_GbANYqyaEemnEIz6kVJMoQ" operationName="get" nickname="get-movies" httpMethod="GET" responseStyle="element" requestStyle="element">
+        <parameters xmi:id="_93NGEKz2EemnEIz6kVJMoQ">
+          <parameterMapping xmi:id="_93NGEaz2EemnEIz6kVJMoQ" parameterName="searchString" parameterType="Query" dataType="string" required="true"/>
+        </parameters>
+        <clientFormat>json</clientFormat>
+        <clientRequestFormat>json</clientRequestFormat>
+      </operation>
+      <parameters xmi:id="_GbMaoKyaEemnEIz6kVJMoQ"/>
+      <advancedConfig xmi:id="_GbANYayaEemnEIz6kVJMoQ" blockingQueueSize="2147483647"/>
+    </scaext:binding>
+    <scact:bindingAdjunct xmi:id="_GbANY6yaEemnEIz6kVJMoQ" bindingName="RestService"/>
+  </sca:service>
+  <sca:property xmi:id="_AfGGEKyOEemnEIz6kVJMoQ" name="BW.APPNODE.NAME" type="XMLSchema:string" scalable="true"/>
+  <sca:property xmi:id="_AfIiUKyOEemnEIz6kVJMoQ" name="BW.DEPLOYMENTUNIT.NAME" type="XMLSchema:string" scalable="true"/>
+  <sca:property xmi:id="_AfJJYKyOEemnEIz6kVJMoQ" name="BW.HOST.NAME" type="XMLSchema:string" scalable="true"/>
+  <sca:property xmi:id="_AfKXgKyOEemnEIz6kVJMoQ" name="BW.DEPLOYMENTUNIT.VERSION" type="XMLSchema:string" scalable="true"/>
+  <sca:property xmi:id="_AfK-kKyOEemnEIz6kVJMoQ" name="BW.MODULE.VERSION" type="XMLSchema:string" scalable="true"/>
+  <sca:property xmi:id="_AfMMsKyOEemnEIz6kVJMoQ" name="BW.CLOUD.PORT" type="XMLSchema:int" scalable="true"/>
+  <sca:property xmi:id="_AfMzwKyOEemnEIz6kVJMoQ" name="BW.MODULE.NAME" type="XMLSchema:string" scalable="true"/>
+  <sca:property xmi:id="_RJRzsKz3EemnEIz6kVJMoQ" name="SearchServiceHost" type="XMLSchema:string" scaext:simpleValue="" publicAccess="true" scalable="true"/>
+  <sca:property xmi:id="_UGZsIKz3EemnEIz6kVJMoQ" name="SearchServicePort" type="XMLSchema:int" publicAccess="true" scalable="true"/>
+  <sca:property xmi:id="_XeKSIKz3EemnEIz6kVJMoQ" name="ServicePort" type="XMLSchema:int" publicAccess="true" scalable="true"/>
+  <sca:property xmi:id="_bg02UKz3EemnEIz6kVJMoQ" name="apikey" type="XMLSchema:string" publicAccess="true" scalable="true"/>
+  <sca:property xmi:id="_iYLIoKz3EemnEIz6kVJMoQ" name="DetailsServiceHost" type="XMLSchema:string" publicAccess="true" scalable="true"/>
+  <sca:property xmi:id="_mdn7EKz3EemnEIz6kVJMoQ" name="DetailsServicePort" type="XMLSchema:int" publicAccess="true" scalable="true"/>
+  <sca:component xmi:id="_AZ-VgKyOEemnEIz6kVJMoQ" name="ComponentProcess" compositeext:version="1.0.0.qualifier">
+    <scaext:implementation xsi:type="BW:BWComponentImplementation" xmi:id="_AZ-VgayOEemnEIz6kVJMoQ" processName="moviecatalogsearch.module.Process"/>
+    <sca:service xmi:id="_Ga-YMKyaEemnEIz6kVJMoQ" name="movies">
+      <sca:interface.wsdl xmi:id="_Ga-YMayaEemnEIz6kVJMoQ" interface="http://xmlns.example.com/20190722200552PLT#wsdl.interface(movies)" scaext:wsdlLocation="../Processes/moviecatalogsearch/module/Process.bwp"/>
+    </sca:service>
+  </sca:component>
+</sca:composite>

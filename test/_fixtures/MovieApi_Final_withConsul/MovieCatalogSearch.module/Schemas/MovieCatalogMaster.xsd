@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/MovieCatalogMaster"
+	xmlns:tns="http://www.example.org/MovieCatalogMaster"
+	elementFormDefault="qualified">
+	<complexType name="OMDBSearchElementType">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="0" name="Search">
+				<complexType>
+					<sequence>
+						<element maxOccurs="1" minOccurs="0" name="Title" type="string" />
+						<element maxOccurs="1" minOccurs="0" name="Year" type="string" />
+						<element maxOccurs="1" minOccurs="0" name="imdbID" type="string" />
+						<element maxOccurs="1" minOccurs="0" name="Type" type="string" />
+						<element maxOccurs="1" minOccurs="0" name="Poster" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			<element maxOccurs="1" minOccurs="0" name="totalResults"
+				type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Response" type="string" />
+		</sequence>
+	</complexType>
+	<complexType name="DetailsType">
+		<sequence>
+			<element maxOccurs="1" minOccurs="0" name="Title" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Year" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Rated" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Released" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Runtime" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Genre" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Director" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Writer" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Actors" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Plot" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Language" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Country" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Awards" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Poster" type="string" />
+			<element maxOccurs="unbounded" minOccurs="0" name="Ratings">
+				<complexType>
+					<sequence>
+						<element maxOccurs="1" minOccurs="0" name="Source" type="string" />
+						<element maxOccurs="1" minOccurs="0" name="Value" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			<element maxOccurs="1" minOccurs="0" name="Metascore" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="imdbRating" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="imdbVotes" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="imdbID" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Type" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="DVD" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="BoxOffice" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Production" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Website" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Response" type="string" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Details">
+		<sequence>
+			<element maxOccurs="1" minOccurs="0" name="imdbID" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Title" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Year" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Plot" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Type" type="string" />
+		</sequence>
+	</complexType>
+
+	<complexType name="OthersDetails">
+		<sequence>
+			<element maxOccurs="1" minOccurs="0" name="imdbID" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Title" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Year" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Plot" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Type" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="Metascore" type="string" />
+			<element maxOccurs="1" minOccurs="0" name="imdbRating" type="string" />
+		</sequence>
+	</complexType>
+	<element name="MovieDetails" type="tns:DetailsType" />
+	<element name="OMDBSearchElement" type="tns:OMDBSearchElementType" />
+	<element name="Movie">
+		<complexType>
+			<sequence>
+				<element name="Movies" minOccurs="0" maxOccurs="unbounded">
+					<complexType>
+						<sequence>
+							<element name="MovieDetail" type="tns:Details">
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+</schema>

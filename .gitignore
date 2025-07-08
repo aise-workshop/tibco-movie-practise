@@ -1,0 +1,31 @@
+# Node.js
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.test
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+.nuxt/
+.cache/
+*.tgz
+
+# Cache directories
+.npm
+.eslintcache
+java-output
+java-output-annotated
+generated
+.idea
+temp-output

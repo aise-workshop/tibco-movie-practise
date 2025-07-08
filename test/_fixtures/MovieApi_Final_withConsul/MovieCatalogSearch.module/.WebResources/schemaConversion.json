@@ -1,0 +1,12 @@
+{"records": [
+    {
+        "jsonSchemaLocation": "/MovieCatalogSearch.module/Resources/swagger.json",
+        "conversionType": "generated",
+        "xsdSchemaTargetNamespace": "/T1563811039923Converted/JsonSchema"
+    },
+    {
+        "jsonSchemaLocation": "/MovieCatalogSearch.module/Service Descriptors/moviecatalogsearch.module.Process-Movies.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://www.example.org/MovieCatalogMaster"
+    }
+]}

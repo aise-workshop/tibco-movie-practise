@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified"
+	targetNamespace="/T1563811039923Converted/JsonSchema" xmlns:tns="/T1563811039923Converted/JsonSchema"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="OMDBSearchElement" type="tns:OMDBSearchElement" />
+	<xs:complexType name="OMDBSearchElement">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="Search">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="1" minOccurs="0" name="Title"
+							type="xs:string" />
+						<xs:element maxOccurs="1" minOccurs="0" name="Year"
+							type="xs:string" />
+						<xs:element maxOccurs="1" minOccurs="0" name="imdbID"
+							type="xs:string" />
+						<xs:element maxOccurs="1" minOccurs="0" name="Type"
+							type="xs:string" />
+						<xs:element maxOccurs="1" minOccurs="0" name="Poster"
+							type="xs:string" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="totalResults" type="xs:string" />
+			<xs:element minOccurs="0" name="Response" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,80 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Summary about the new REST service.",
+    "description" : "Summary about the new REST service."
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/movies" : {
+      "get" : {
+        "summary" : "",
+        "description" : "",
+        "operationId" : "get-movies",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "searchString",
+          "in" : "query",
+          "description" : "",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a Movie to be returned",
+            "schema" : {
+              "$ref" : "#/definitions/Movie"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Movie" : {
+      "type" : "object",
+      "properties" : {
+        "Movies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Movies",
+            "uniqueItems" : false
+          }
+        }
+      }
+    },
+    "Movies" : {
+      "type" : "object",
+      "required" : [ "MovieDetail" ],
+      "properties" : {
+        "MovieDetail" : {
+          "$ref" : "#/definitions/MovieDetail"
+        }
+      }
+    },
+    "MovieDetail" : {
+      "type" : "object",
+      "properties" : {
+        "imdbID" : {
+          "type" : "string"
+        },
+        "Title" : {
+          "type" : "string"
+        },
+        "Year" : {
+          "type" : "string"
+        },
+        "Plot" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
