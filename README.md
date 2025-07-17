@@ -1,264 +1,184 @@
 # TIBCO Movie Example
 
-## 步骤 1：Plan 实现 1 - 初始化和 Schemas 模型转换
+## 分阶段迁移模板
 
-我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。现在我，需要你实现如下的功能：
+### 📋 阶段 1：项目分析
 
-- 读取 Schemas 目录下的 .xsd 文件，转换为对应的 Java 类
+```markdown
+我需要分析一个 Tibco BW 项目的迁移可行性。
 
-要求：
+**项目路径**：`{TIBCO_BW_PROJECT_PATH}`
 
-1. 在解析完后，应该对比 Java 的 .xsd 实现的差异？
-2. 我需要你认真概念设计 JavaScript 的类目录结构实现，方便未来迁移。
-3. 需要编写对应的解析相关单元测试
+请帮我：
 
-## 步骤 2：Plan 逻辑实现 2 - 转换 Process 
+1. **结构分析**：
+   ```bash
+   # 验证 BWP 文件
+   find {TIBCO_BW_PROJECT_PATH} -name "*.bwp" -exec node dist/cli.js validate -i {} \;
+   
+   # 检查项目结构
+   node dist/cli.js auto {TIBCO_BW_PROJECT_PATH} --no-deploy --no-app-start
+   ```
 
-### 2.1 继续 （Augment）
+2. **生成分析报告**：
+   - BWP 文件数量和复杂度
+   - XSD Schema 结构
+   - 外部依赖识别
+   - 潜在风险评估
 
-我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。现在我实现了基本的 xsd 解析，需要你实现 .bwp 解析，转换为对应的 Java 逻辑代码。
+3. **制定迁移计划**：
+   - 优先级排序
+   - 分阶段策略
+   - 资源需求评估
 
-1. 解析 .bwp 文件，以 test/_fixtures/MovieApi_Final_withConsul/MovieCatalogSearch.module/Processes/moviecatalogsearch/module/SearchMovies.bwp 为例 
-2. 转换逻辑到 Java 代码中，编写对应的单元测试
-3. 接着应该复制到  spring-boilerplate 项目中，看能否启动项目
-
-请确保所有的测试都是通过的
-
-## 步骤 3. Plan 实现：Build and Fix（反复 N 轮）
-
-我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。我实现了基本的 xsd 和 .bwp 解析，转换为对应的 Java 逻辑代码。
-现在，请帮我通过 CLI 来实现：
-
-1. 能把这个 searchMovie 的逻辑代码复制到正确的位置（可能是通过 Rule 或者文件名）
-2. 能启动 spring-boilerplate 项目中，访问 API，以验证和 TIBCO BW 中的 swagger.json 是一致的接口
-3. 如果可能的话，请编写测试
-
-最后，请确保所有的测试都是通过的，
-
-### toString 问题
-
-我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。我实现了基本的 xsd 和 .bwp 解析，转换为对应的 Java 逻辑代码
-
-现在，项目中的 toString 转换是有问题的。你需要：
-
-1. 修复 toString 的转换问题
-2. 把代码复制到 spring-boilerplate 中，看能否正确编译？
-
-请确保所有的测试都是通过的
-
-### 优化 CLI 自动化
-
-优化 CLI 自动化流程。我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。如下是我已经实现的 CLI 命令：
-
-```
-node dist/cli.js convert \
-  -i test/_fixtures/MovieApi_Final_withConsul/MovieCatalogSearch.module/Processes/moviecatalogsearch/module/SearchMovies.bwp \
-  -s test/_fixtures/MovieApi_Final_withConsul/MovieCatalogSearch.module/Schemas \
-  -o temp-output \
-  -p com.example.movies \
-  --spring-boot-project spring-boilerplate \
-  --validate-api \
-  --swagger-json test/_fixtures/MovieApi_Final_withConsul/MovieCatalogSearch.module/Resources/swagger.json
+请提供详细的分析结果和建议的迁移路径。
 ```
 
-现在的问题是：
+### 🔧 阶段 2：核心转换
 
-1. 需要优化 CLI 的自动化流程，确保转换后的代码能够正确运行。如果不行的话，需要实现代码，或者模板工程（spring-boilerplate）中，能够正确运行。
-2. 简化现在的 CLI 命令，确保用户可以更容易地使用。
+```markdown
+我已完成项目分析，现在需要执行核心转换。
 
-请确保所有的测试都是通过的。
+**当前状态**：项目分析完成，准备开始转换
+**目标**：生成可编译的 Spring Boot 代码
 
-### ++
+请帮我：
 
-优化 CLI 自动化流程。我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。
-现在的问题是：
+1. **执行转换**：
+   ```bash
+   node dist/cli.js auto {TIBCO_BW_PROJECT_PATH} -p {PACKAGE_NAME} --no-app-start
+   ```
 
-1. 需要优化 CLI 的自动化流程，确保转换后的代码能够正确运行。如果不行的话，需要实现代码，或者模板工程（spring-boilerplate）中，能够正确运行。
-2. 简化 CLI 参数，去掉没有用的部分，按道理，我只需要输入一个 Tibco BW 的目录就能自动转换才对，诸如：test/_fixtures/
+2. **验证生成结果**：
+   - 检查生成的 Controller 和 Service
+   - 验证 XSD 模型类
+   - 确认 application.properties 配置
 
-请确保所有的测试都是通过的。
+3. **修复常见问题**：
+   - toString 方法问题
+   - 外部 API 配置
+   - 数据类型映射
 
-## 步骤 4. 自动对比运行时结果
+4. **编译验证**：
+   ```bash
+   cd spring-boilerplate
+   mvn compile
+   ```
 
-### 生成 JavaScript API 测试代码
-
-我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。现在，请帮我创建一个新的 bin 命令，以：
-
-1. 搜索和读取目录下的 Swagger 文件，生成 API 测试代码；（需要考虑创建新的 features/openapi）
-2. 启动 Spring Boot 应用，使用步骤 1 生成的 API 测试代码，来校验是否正确
-3. 如果缺少 API 需要 review 一下现在的流程对不对。
-
-现在的 CLI 命令如下： `node dist/cli.js auto test/_fixtures/`
-
-尝试让这个过程更加流畅和完整
-
-### Swagger 生成 API 测试代码
-
-我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。
-
-1. Java 集成测试生成。需要读取生成 Swagger 的文件，然后创建 Integration Testing 测试，诸如  @SpringBootTest 
-
-
-## 步骤 4. 构建修复
-
-我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。现在我使用转换完后的 Spring Boot 应用测试，启动后出现  
-500 问题，到底是有些信息没有从 test/_fixtures 解析出来，还是默认生成的 application.properties 不对，帮我修复问题吧
-
-```java
-2025-07-08T11:18:47.572+08:00 ERROR 27675 --- [movies-api] [nio-8080-exec-6] c.example.movies.SearchMoviesController  : Error in get: Service call failed
-
-java.lang.RuntimeException: Service call failed
-        at com.example.movies.SearchMoviesService.get(SearchMoviesService.java:24) ~[classes/:na]
-        at com.example.movies.SearchMoviesController.get(SearchMoviesController.java:21) ~[classes/:na]
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-        at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.42.jar:6.0]
-        at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.8.jar:6.2.8]
-        at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.42.jar:6.0]
-        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:114) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.42.jar:10.1.42]
-        at java.base/java.lang.Thread.run(Thread.java:1575) ~[na:na]
-Caused by: java.lang.IllegalArgumentException: URI is not absolute
-        at java.base/java.net.URL.of(URL.java:862) ~[na:na]
-        at java.base/java.net.URI.toURL(URI.java:1172) ~[na:na]
-        at org.springframework.http.client.SimpleClientHttpRequestFactory.createRequest(SimpleClientHttpRequestFactory.java:142) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.http.client.support.HttpAccessor.createRequest(HttpAccessor.java:124) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:884) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:801) ~[spring-web-6.2.8.jar:6.2.8]
-        at org.springframework.web.client.RestTemplate.getForObject(RestTemplate.java:415) ~[spring-web-6.2.8.jar:6.2.8]
-        at com.example.movies.SearchMoviesService.get(SearchMoviesService.java:18) ~[classes/:na]
-        ... 53 common frames omitted
+请确保生成的代码结构正确且能编译通过。
 ```
 
-### 转换问题
+### 🧪 阶段 3：API 测试验证
 
-有点问题，自动转换完的代码，应该能接收 OMDB API 返回的结果，现在
+```markdown
+我已完成代码转换，现在需要验证 API 功能。
 
-http://127.0.0.1:8080/movies?searchString=batman
+**当前状态**：Spring Boot 代码生成完成，编译通过
+**目标**：验证 API 功能正确性
 
-返回的 total 是有的，但是 search 是空的
-{"search":[],"totalResults":"613","response":null}
+请帮我：
 
-### API 调用错误 （反复优化 Prompt，丰富上下文）
+1. **生成并执行 API 测试**：
+   ```bash
+   node dist/cli.js test-api {TIBCO_BW_PROJECT_PATH} \
+     --spring-boot-project spring-boilerplate \
+     -p {PACKAGE_NAME} \
+     --port 8080
+   ```
 
-实现现在的外部 API 转换。
+2. **验证检查点**：
+   - [ ] Spring Boot 应用启动成功
+   - [ ] API 端点响应正确
+   - [ ] 与原始 Swagger 规范一致
+   - [ ] 外部 API 调用正常
 
-背景：
+3. **功能测试**：
+   ```bash
+   # 测试主要 API
+   curl "http://localhost:8080/movies?searchString=batman"
+   
+   # 验证响应格式
+   # 预期：{"search":[...],"totalResults":"613","response":"True"}
+   ```
 
-我正在使用 JavaScript 实现一个 Tibco BW 转 Java + Spring Boot 的 CLI 工具。当我调用 
-http://127.0.0.1:8080/movies?searchString=batman 的时候，是调用了 omdbapi，但是：
+4. **问题排查**：
+   - 如果 API 返回空数据，检查外部 API 配置
+   - 如果启动失败，检查依赖和配置
+   - 如果测试失败，分析错误日志
 
-- 不应该调用 "/movies?searchString="
-- 有可能调用：`http://www.omdbapi.com/?s=batman&apikey=62eec860` 才是 search 吧 （ http://www.omdbapi.com/ 有详细的文档介绍。
-
-
-可能方向：
-- 你看看原来的 .bwp 文件（比如 ） 或者 shemas 看看哪里有问题（test/_fixtures 目录下是所有的 Tibco BW 原代码）
-
-我看到 default.substvar 文件中，有一个 apiKey，是不是应该把这个文件都转换到 appliation.properties 里？我看到 SortMovies.bwp 中使用到了这个 key,
-
-还有对应的 i 参数，是不是没有正确处理这个逻辑导致的问题？？你看看里面的代码：
-
-```xml
-<referenceBinding name="Www-omdbapi-com" xsi:type="scact:Reference">
-  <sca:interface.wsdl
-          interface="http://xmlns.example.com/20190722213305PLT#wsdl.interface(Www-omdbapi-com)" scaext:wsdlLocation=""/>
-  <scaext:binding basePath="/"
-                  connector="moviecatalogsearch.module.HttpClientResource1"
-                  docBasePath="http://localhost:7777/"
-                  docResourcePath="Default"
-                  name="RestReference" path="/"
-                  structuredData="true"
-                  technologyVersion="" xsi:type="rest:RestReferenceBinding">
-    <operation httpMethod="GET"
-               ignoreAdditionalJsonFields="true"
-               nickname="get-Www-omdbapi-com"
-               operationName="get"
-               requestEntityProcessing="chunked" responseStyle="element">
-      <parameters>
-        <parameterMapping
-                dataType="string"
-                parameterName="i"
-                parameterType="Query" required="true"/>
-        <parameterMapping
-                dataType="string"
-                parameterName="apikey"
-                parameterType="Query" required="true"/>
-      </parameters>
-      <clientFormat>json</clientFormat>
-      <clientRequestFormat>json</clientRequestFormat>
-    </operation>
-    <parameters/>
-    <advancedConfig blockingQueueSize="2147483647"/>
-  </scaext:binding>
-</referenceBinding>
+请确保所有 API 功能正常工作。
 ```
 
-不应该添加特殊的转换逻辑，而是通用的转换逻辑，而是先找找如何实现通用的转换，比如所有的外部 API 是不是有类似于 FeignClient 的方式调用。
-有尽可能实现更加通用的 Tibco BW 项目转换。
+## 问题解决模板
 
-## 步骤 5. 项目测试，构建知识库
+### 🔍 配置问题诊断
 
-### API 测试 Ai Agent
+```markdown
+我的 Tibco BW 迁移项目遇到配置相关问题。
 
-- 调用 API 验证结果
-    - 生成 API 调用（参数
-- 读取目录
-- 读取文件
-- 写入文件
-    - 小文件
-    - 大文件
+**问题描述**：{具体问题描述}
+**错误信息**：
+```
+{错误日志}
+```
 
-### 总结转换的 FAQ （多次）
+请帮我：
 
+1. **诊断问题**：
+   - 分析错误日志
+   - 检查相关配置文件
+   - 识别根本原因
 
-## 步骤 5. 结合 AI 划分分层（可选）
+2. **解决方案**：
+   - 提供具体的修复步骤
+   - 更新配置文件
+   - 验证修复效果
 
-### 生成 AI Agent
+3. **预防措施**：
+   - 避免类似问题的最佳实践
+   - 配置验证方法
+
+请提供详细的解决方案和验证步骤。
+```
+
+### 🚨 API 调用问题修复
+
+```markdown
+我的迁移项目中外部 API 调用有问题。
+
+**问题现象**：
+- API 返回空数据或错误
+- 外部服务调用失败
+- 参数映射不正确
+
+**当前配置**：
+- 项目路径：{TIBCO_BW_PROJECT_PATH}
+- 生成的代码路径：spring-boilerplate
+
+请帮我：
+
+1. **分析原始配置**：
+   - 检查 .substvar 文件中的 API 配置
+   - 分析 BWP 文件中的外部服务调用
+   - 验证参数映射规则
+
+2. **修复生成的代码**：
+   - 更新 application.properties
+   - 修正 Service 类中的 API 调用
+   - 调整参数映射逻辑
+
+3. **验证修复**：
+   ```bash
+   # 重新启动应用
+   cd spring-boilerplate
+   mvn spring-boot:run
+   
+   # 测试 API
+   curl "http://localhost:8080/movies?searchString=batman"
+   ```
+
+请确保外部 API 调用正常工作。
+```
 
 
 
