@@ -1,271 +1,621 @@
-# 优化的 Tibco BW 迁移 AI Workflow
+# 从零构建 Tibco BW 迁移 CLI 工具的提示词
 
-## 概述
+## 学习目标
 
-基于当前项目的成熟架构，这个优化的工作流程利用了现有的自动化功能，减少了手动步骤，提高了成功率和可验证性。
+通过多轮提示词练习，学员将从零开始构建一个完整的 Tibco BW 到 Spring Boot 的迁移 CLI 工具。
 
-## 阶段 1：项目分析与准备 (Analysis & Preparation)
+## 示例项目结构
 
-### 提示词模板 1.1：项目结构分析
+学员将基于以下示例项目进行练习：
+```
+test/_fixtures/MovieApi_Final_withConsul/
+├── MovieCatalogSearch.module/
+│   ├── Processes/moviecatalogsearch/module/SearchMovies.bwp
+│   ├── Schemas/
+│   │   ├── MovieCatalogMaster.xsd
+│   │   └── OMDBSearchElement.xsd
+│   └── Resources/swagger.json
+└── META-INF/
+    └── default.substvar
+```
+
+## 阶段 1：项目初始化和基础解析器
+
+### 提示词 1.1：项目架构设计
 
 ```markdown
-我正在使用一个成熟的 Tibco BW 转 Spring Boot 的 CLI 工具进行遗留系统迁移。
+我需要从零开始构建一个 Tibco BW 转 Spring Boot 的 CLI 工具。
 
-**当前任务**：分析 Tibco BW 项目结构并制定迁移计划
+**项目需求**：
+- 解析 .bwp 文件（XML 格式的 Tibco BusinessWorks 流程文件）
+- 解析 .xsd 文件生成 Java 模型类
+- 生成 Spring Boot Controller 和 Service
+- 支持外部 API 调用转换
 
-**项目路径**：`{TIBCO_BW_PROJECT_PATH}`
+**第一步任务**：设计项目架构和初始化
 
 **要求**：
-1. 使用 `node dist/cli.js validate -i {BWP_FILE_PATH}` 验证 BWP 文件结构
-2. 分析项目中的关键组件：
-   - BWP 文件数量和复杂度
-   - XSD Schema 文件结构
-   - 外部 API 依赖（HTTP 客户端配置）
-   - 配置文件（.substvar, .properties）
-3. 识别潜在的迁移风险点
-4. 制定分阶段迁移计划
+1. 创建 TypeScript/Node.js 项目结构
+2. 设计核心模块架构：
+   - `src/parsers/` - 解析器模块
+   - `src/generators/` - 代码生成器模块
+   - `src/types/` - 类型定义
+   - `src/cli/` - CLI 接口
+   - `src/utils/` - 工具函数
 
-**成功标准**：
-- BWP 文件验证通过
-- 生成详细的项目分析报告
-- 确定迁移优先级和依赖关系
+3. 初始化项目配置：
+   - package.json 依赖配置
+   - TypeScript 配置
+   - 测试框架配置
+
+4. 定义核心数据结构：
+   - BWP 流程表示
+   - XSD 模型表示
+   - 生成配置选项
+
+请提供完整的项目初始化代码和架构设计。
 ```
 
-### 提示词模板 1.2：环境准备与依赖检查
+### 提示词 1.2：XSD 解析器实现
 
 ```markdown
-**当前任务**：准备迁移环境并验证工具链
+我正在构建 Tibco BW 迁移工具，现在需要实现 XSD 解析器。
+
+**当前任务**：实现 XSD 文件解析，生成 Java 模型类
+
+**示例 XSD 文件**：`test/_fixtures/MovieCatalogSearch.module/Schemas/MovieCatalogMaster.xsd`
 
 **要求**：
-1. 验证 CLI 工具功能：`npm test`
-2. 检查 Spring Boot 模板项目状态
-3. 验证所有必要的解析器和生成器
-4. 设置输出目录和包结构
+1. **创建 XSD 解析器** (`src/parsers/xsd-parser.ts`)：
+   - 解析 XSD 文件结构
+   - 提取复杂类型定义
+   - 处理元素和属性
+   - 支持嵌套类型
 
-**验证命令**：
-```bash
-# 验证工具链
-npm run build
-npm test -- test/unit/
-npm test -- test/integration/
+2. **创建 Java 模型生成器** (`src/generators/xsd-java-model-generator.ts`)：
+   - 将 XSD 类型转换为 Java 类
+   - 生成字段、getter/setter
+   - 添加 Jackson 注解
+   - 支持 JSR-303 验证注解
 
-# 测试自动检测功能
-node dist/cli.js auto {TIBCO_BW_PROJECT_PATH} --no-deploy --no-app-start
+3. **实现类型映射**：
+   - XSD 基础类型 → Java 类型
+   - 复杂类型 → Java 类
+   - 数组类型 → List<T>
+
+4. **编写单元测试**：
+   - 测试 XSD 解析功能
+   - 验证 Java 代码生成
+   - 对比生成结果与预期
+
+**验证要求**：
+- 能解析示例 XSD 文件
+- 生成可编译的 Java 类
+- 包含正确的注解和类型映射
+
+请实现完整的 XSD 解析和 Java 模型生成功能。
 ```
 
-**成功标准**：
-- 所有测试通过
-- 自动检测功能正常工作
-- Spring Boot 模板项目可编译
-```
+## 阶段 2：BWP 文件解析和业务逻辑转换
 
-## 阶段 2：自动化转换与验证 (Automated Conversion)
-
-### 提示词模板 2.1：一键自动转换
+### 提示词 2.1：BWP 解析器实现
 
 ```markdown
-**当前任务**：执行完整的自动化转换流程
+我正在构建 Tibco BW 迁移工具，已完成 XSD 解析器，现在需要实现 BWP 文件解析。
 
-**使用优化的自动转换命令**：
-```bash
-node dist/cli.js auto {TIBCO_BW_PROJECT_PATH} \
-  -p {PACKAGE_NAME} \
-  --port {PORT} \
-  --no-app-start
-```
+**当前任务**：解析 BWP 文件，提取业务流程逻辑
+
+**示例 BWP 文件**：`test/_fixtures/MovieCatalogSearch.module/Processes/moviecatalogsearch/module/SearchMovies.bwp`
+
+**BWP 文件结构分析**：
+- XML 格式的业务流程定义
+- 包含 REST 端点定义
+- 包含活动（Activities）和流程逻辑
+- 包含外部服务调用配置
 
 **要求**：
-1. 让工具自动检测和转换所有组件
-2. 验证生成的代码结构和质量
-3. 检查 application.properties 配置
-4. 确认所有 XSD 模型正确生成
+1. **创建 BWP 解析器** (`src/parsers/bwp-parser.ts`)：
+   - 解析 XML 结构
+   - 提取 REST 端点信息（路径、方法、参数）
+   - 解析活动流程（Activities）
+   - 提取外部服务调用配置
 
-**验证检查点**：
-- [ ] BWP 文件解析成功
-- [ ] XSD 模型生成完整
-- [ ] Controller 和 Service 代码生成
-- [ ] 外部 API 客户端配置正确
-- [ ] 配置文件转换完整
-- [ ] 代码部署到 Spring Boot 项目成功
+2. **定义数据结构** (`src/types/index.ts`)：
+   ```typescript
+   interface BWPProcess {
+     name: string;
+     namespace: string;
+     restEndpoints: RestEndpoint[];
+     activities: Activity[];
+     variables: Variable[];
+     partnerLinks: PartnerLink[];
+   }
 
-**如果失败**：分析错误日志，使用 `quick` 命令进行单文件调试
+   interface RestEndpoint {
+     path: string;
+     method: string;
+     parameters: Parameter[];
+     responseType: string;
+   }
+   ```
+
+3. **处理特殊元素**：
+   - `<referenceBinding>` - 外部服务配置
+   - `<operation>` - REST 操作定义
+   - `<parameterMapping>` - 参数映射
+
+4. **编写解析测试**：
+   - 验证 REST 端点提取
+   - 验证参数映射解析
+   - 验证外部服务配置
+
+**验证要求**：
+- 正确解析示例 BWP 文件
+- 提取出 `/movies` GET 端点
+- 识别 OMDB API 外部调用配置
+
+请实现完整的 BWP 解析功能。
 ```
 
-### 提示词模板 2.2：代码质量验证与修复
+### 提示词 2.2：Spring Boot 代码生成器
 
 ```markdown
-**当前任务**：验证生成代码的质量并修复问题
+我正在构建 Tibco BW 迁移工具，已完成 BWP 解析，现在需要生成 Spring Boot 代码。
 
-**验证步骤**：
-1. 编译检查：`cd spring-boilerplate && mvn compile`
-2. 代码结构检查：验证包结构、类命名、方法签名
-3. 配置完整性检查：验证 application.properties 包含所有必要配置
-
-**常见问题修复**：
-- toString 方法生成问题
-- 外部 API URL 配置问题
-- 参数映射错误
-- 数据类型转换问题
-
-**修复策略**：
-1. 使用现有的生成器选项调整代码生成
-2. 手动修复关键配置文件
-3. 验证修复效果
-
-**成功标准**：
-- Spring Boot 项目编译通过
-- 所有生成的类结构正确
-- 配置文件完整且有效
-```
-
-## 阶段 3：API 测试与验证 (API Testing & Validation)
-
-### 提示词模板 3.1：API 测试生成与执行
-
-```markdown
-**当前任务**：生成 API 测试并验证接口一致性
-
-**使用 API 测试命令**：
-```bash
-node dist/cli.js test-api {TIBCO_BW_PROJECT_PATH} \
-  --spring-boot-project spring-boilerplate \
-  -p {PACKAGE_NAME} \
-  --port {PORT}
-```
+**当前任务**：将解析的 BWP 流程转换为 Spring Boot Controller 和 Service
 
 **要求**：
-1. 自动生成集成测试和单元测试
-2. 启动 Spring Boot 应用
-3. 执行 API 一致性验证
-4. 运行健康检查
+1. **创建 Controller 生成器** (`src/generators/bwp-java-generator.ts`)：
+   - 生成 `@RestController` 类
+   - 根据 BWP 端点生成 `@GetMapping`/`@PostMapping` 方法
+   - 处理请求参数绑定
+   - 生成响应处理逻辑
 
-**验证检查点**：
-- [ ] Swagger 文件解析成功
-- [ ] API 测试代码生成
-- [ ] Spring Boot 应用启动成功
-- [ ] API 端点响应正确
-- [ ] 与原始 Swagger 规范一致
+2. **创建 Service 生成器**：
+   - 生成 `@Service` 类
+   - 实现业务逻辑
+   - 处理外部 API 调用（RestTemplate）
+   - 异常处理
 
-**如果 API 不一致**：
-1. 检查参数映射配置
-2. 验证外部 API 客户端配置
-3. 调整 Controller 方法签名
+3. **外部 API 客户端生成** (`src/generators/external-api-client-generator.ts`)：
+   - 根据 BWP 中的 `<referenceBinding>` 生成客户端代码
+   - 处理 URL 配置和参数映射
+   - 生成 HTTP 调用逻辑
+
+4. **配置文件生成** (`src/generators/properties-generator.ts`)：
+   - 解析 `.substvar` 文件
+   - 生成 `application.properties`
+   - 处理外部服务 URL 和 API 密钥
+
+**示例生成目标**：
+```java
+@RestController
+public class SearchMoviesController {
+    @GetMapping("/movies")
+    public ResponseEntity<OMDBSearchElement> searchMovies(
+        @RequestParam String searchString) {
+        // 调用 service 层
+    }
+}
+
+@Service
+public class SearchMoviesService {
+    public OMDBSearchElement search(String searchString) {
+        // 调用外部 OMDB API
+    }
+}
 ```
 
-### 提示词模板 3.2：端到端功能验证
+**验证要求**：
+- 生成可编译的 Spring Boot 代码
+- 正确映射 BWP 端点到 Spring 注解
+- 外部 API 调用配置正确
+
+请实现完整的 Spring Boot 代码生成功能。
+```
+
+## 阶段 3：CLI 接口和自动化流程
+
+### 提示词 3.1：CLI 命令行接口实现
 
 ```markdown
-**当前任务**：执行端到端功能测试
+我正在构建 Tibco BW 迁移工具，已完成解析器和生成器，现在需要实现 CLI 接口。
 
-**测试场景**：
-1. 使用真实数据测试主要业务流程
-2. 验证外部 API 调用（如 OMDB API）
-3. 测试错误处理和边界情况
-4. 性能基准测试
+**当前任务**：创建用户友好的命令行接口
 
-**验证命令**：
+**要求**：
+1. **创建 CLI 主入口** (`src/cli.ts`)：
+   - 使用 `commander.js` 创建命令行接口
+   - 支持多个子命令
+   - 提供帮助信息和使用示例
+
+2. **实现核心命令**：
+   ```bash
+   # 转换单个 BWP 文件
+   tibco-cli convert -i input.bwp -s schemas/ -o output/ -p com.example
+
+   # 验证 BWP 文件
+   tibco-cli validate -i input.bwp
+
+   # 生成模型类
+   tibco-cli generate-models -s schemas/ -o output/ -p com.example.model
+
+   # 自动转换整个项目
+   tibco-cli auto project-dir/ -p com.example
+   ```
+
+3. **命令选项设计**：
+   - `-i, --input` - 输入 BWP 文件
+   - `-s, --schemas` - XSD 模式目录
+   - `-o, --output` - 输出目录
+   - `-p, --package` - Java 包名
+   - `--spring-boot-project` - Spring Boot 项目路径
+   - `--no-validation` - 禁用验证注解
+   - `--lombok` - 使用 Lombok
+
+4. **错误处理和用户体验**：
+   - 友好的错误信息
+   - 进度指示器
+   - 详细的日志输出
+   - 成功/失败状态反馈
+
+**验证要求**：
+- CLI 命令正常工作
+- 帮助信息清晰
+- 错误处理完善
+- 支持常见使用场景
+
+请实现完整的 CLI 接口。
+```
+
+### 提示词 3.2：自动化工作流程实现
+
+```markdown
+我正在构建 Tibco BW 迁移工具，已完成基础功能，现在需要实现自动化工作流程。
+
+**当前任务**：实现一键自动转换功能
+
+**要求**：
+1. **自动检测功能**：
+   - 自动查找 BWP 文件
+   - 自动检测 Schemas 目录
+   - 自动发现 swagger.json 文件
+   - 自动检测配置文件
+
+2. **集成转换流程**：
+   ```typescript
+   async function autoConvert(projectDir: string, options: AutoConvertOptions) {
+     // 1. 项目结构分析
+     const projectStructure = await analyzeProject(projectDir);
+
+     // 2. 解析所有组件
+     const bwpData = await parseBWP(projectStructure.bwpFiles);
+     const xsdModels = await parseXSD(projectStructure.schemasDir);
+     const config = await parseConfig(projectStructure.configFiles);
+
+     // 3. 生成代码
+     const javaCode = await generateJavaCode(bwpData, xsdModels, options);
+
+     // 4. 部署到 Spring Boot 项目
+     await deployToSpringBoot(javaCode, options.springBootProject);
+
+     // 5. 验证结果
+     await validateDeployment(options.springBootProject);
+   }
+   ```
+
+3. **Spring Boot 项目集成** (`src/utils/spring-boot-deployer.ts`)：
+   - 自动复制生成的代码到正确位置
+   - 更新 Spring Boot 配置
+   - 验证项目编译
+   - 可选的应用启动测试
+
+4. **验证和测试**：
+   - 代码编译验证
+   - 基础功能测试
+   - API 一致性检查
+   - 生成测试报告
+
+**示例使用**：
 ```bash
-# 运行集成测试
-cd spring-boilerplate
-mvn test
+# 一键转换整个项目
+tibco-cli auto test/_fixtures/ -p com.example.movies
 
-# 手动 API 测试
-curl "http://localhost:{PORT}/movies?searchString=batman"
+# 输出应该包括：
+# ✅ 发现 BWP 文件: SearchMovies.bwp
+# ✅ 发现 Schemas 目录: Schemas/
+# ✅ 生成 30+ 模型类
+# ✅ 生成 Controller 和 Service
+# ✅ 部署到 Spring Boot 项目
+# ✅ 编译验证通过
 ```
 
-**成功标准**：
-- 所有自动化测试通过
-- API 返回预期的数据结构
-- 外部 API 集成正常工作
-- 错误处理机制有效
+**验证要求**：
+- 自动检测功能正常
+- 端到端转换流程完整
+- 生成的 Spring Boot 项目可运行
+- 提供详细的执行报告
+
+请实现完整的自动化工作流程。
 ```
 
-## 阶段 4：部署优化与文档 (Deployment & Documentation)
+## 阶段 4：测试验证和问题修复
 
-### 提示词模板 4.1：生产就绪优化
+### 提示词 4.1：测试框架和验证
 
 ```markdown
-**当前任务**：优化应用以适应生产环境
+我正在构建 Tibco BW 迁移工具，已完成核心功能，现在需要实现完整的测试框架。
 
-**优化项目**：
-1. 配置管理优化（环境变量、配置文件分离）
-2. 日志配置和监控集成
-3. 安全配置（API 密钥管理、HTTPS）
-4. 性能优化（连接池、缓存）
+**当前任务**：构建测试框架，验证工具的正确性
 
-**验证部署就绪性**：
-- [ ] 配置外部化完成
-- [ ] 日志级别和格式正确
-- [ ] 健康检查端点可用
-- [ ] 安全配置到位
-- [ ] 文档完整
+**要求**：
+1. **单元测试实现** (`test/unit/`)：
+   ```typescript
+   // bwp-parser.test.ts
+   describe('BWP Parser', () => {
+     it('should parse REST endpoints correctly', () => {
+       // 测试 BWP 文件解析
+     });
 
-**生成部署文档**：包括环境要求、配置说明、部署步骤
+     it('should extract external service configurations', () => {
+       // 测试外部服务配置提取
+     });
+   });
+
+   // xsd-parser.test.ts
+   describe('XSD Parser', () => {
+     it('should generate correct Java models', () => {
+       // 测试 XSD 到 Java 转换
+     });
+   });
+   ```
+
+2. **集成测试实现** (`test/integration/`)：
+   - 端到端转换测试
+   - Spring Boot 部署测试
+   - API 功能验证测试
+
+3. **测试数据准备**：
+   - 创建 `test/_fixtures/` 目录
+   - 准备示例 BWP、XSD、配置文件
+   - 创建预期输出的参考文件
+
+4. **自动化测试流程**：
+   ```bash
+   # 运行所有测试
+   npm test
+
+   # 运行特定测试
+   npm test -- test/unit/bwp-parser.test.ts
+
+   # 生成覆盖率报告
+   npm run test:coverage
+   ```
+
+**验证要求**：
+- 测试覆盖率 > 80%
+- 所有核心功能有测试覆盖
+- 集成测试验证端到端流程
+- 测试数据完整且真实
+
+请实现完整的测试框架。
 ```
 
-### 提示词模板 4.2：知识库构建与总结
+### 提示词 4.2：问题诊断和修复
 
 ```markdown
-**当前任务**：构建迁移知识库和最佳实践
+我正在构建 Tibco BW 迁移工具，在测试过程中发现了一些问题需要修复。
 
-**文档输出**：
-1. **迁移总结报告**：
-   - 转换的组件清单
-   - 遇到的问题和解决方案
-   - 性能对比数据
-   - 功能验证结果
+**常见问题场景**：
 
-2. **运维手册**：
-   - 部署指南
-   - 配置管理
-   - 故障排除
-   - 监控和维护
+**问题 1：外部 API 调用配置错误**
+- 现象：生成的代码中外部 API URL 不正确
+- 原因：`.substvar` 文件解析或 URL 拼接逻辑错误
+- 修复方向：检查配置解析器和 URL 处理逻辑
 
-3. **开发者指南**：
-   - 代码结构说明
-   - API 文档
-   - 扩展开发指南
+**问题 2：数据类型映射错误**
+- 现象：XSD 类型转换为错误的 Java 类型
+- 原因：类型映射表不完整或映射逻辑错误
+- 修复方向：完善类型映射规则
 
-4. **FAQ 和最佳实践**：
-   - 常见问题解决方案
-   - 迁移最佳实践
-   - 工具使用技巧
+**问题 3：生成的代码编译失败**
+- 现象：Spring Boot 项目编译报错
+- 原因：包导入、注解使用或语法错误
+- 修复方向：检查代码生成模板
 
-**知识库验证**：确保文档完整、准确、可操作
+**要求**：
+1. **实现问题诊断工具**：
+   ```typescript
+   // src/utils/diagnostics.ts
+   export class DiagnosticTool {
+     async validateBWPFile(filePath: string): Promise<ValidationResult> {
+       // 验证 BWP 文件结构
+     }
+
+     async validateGeneratedCode(outputDir: string): Promise<ValidationResult> {
+       // 验证生成的 Java 代码
+     }
+
+     async checkExternalApiConfig(config: ProjectConfig): Promise<ValidationResult> {
+       // 检查外部 API 配置
+     }
+   }
+   ```
+
+2. **错误处理和恢复**：
+   - 详细的错误信息和建议
+   - 自动修复常见问题
+   - 提供手动修复指导
+
+3. **调试和日志**：
+   - 详细的执行日志
+   - 中间结果输出
+   - 性能监控
+
+**修复验证流程**：
+```bash
+# 诊断问题
+tibco-cli diagnose -i test/_fixtures/SearchMovies.bwp
+
+# 修复后重新测试
+tibco-cli auto test/_fixtures/ -p com.example.movies
+
+# 验证修复结果
+cd spring-boilerplate && mvn compile
+curl "http://localhost:8080/movies?searchString=batman"
 ```
 
-## 工作流程控制
+**验证要求**：
+- 问题能被准确诊断
+- 提供清晰的修复建议
+- 修复后功能正常
+- 避免回归问题
 
-### 错误处理策略
+请实现问题诊断和修复功能。
+```
+
+## 阶段 5：高级功能和优化
+
+### 提示词 5.1：API 测试生成和验证
 
 ```markdown
-**当遇到错误时**：
-1. **分析错误类型**：解析错误、生成错误、部署错误、运行时错误
-2. **使用诊断命令**：
-   - `node dist/cli.js validate -i {BWP_FILE}`
-   - `npm test -- test/unit/{相关测试}`
-   - 查看详细日志和错误堆栈
-3. **分步调试**：使用 `quick` 命令单独测试组件
-4. **回滚策略**：保持工作版本，增量修复
+我正在构建 Tibco BW 迁移工具，需要添加 API 测试生成功能。
 
-**常见错误模式**：
-- 外部 API URL 配置错误 → 检查 .substvar 文件转换
-- 数据类型映射错误 → 验证 XSD 解析结果
-- 依赖注入问题 → 检查 Spring 注解生成
+**当前任务**：基于 Swagger 规范生成 API 测试代码
+
+**要求**：
+1. **Swagger 解析器** (`src/features/openapi/swagger-parser.ts`)：
+   - 解析 swagger.json 文件
+   - 提取 API 端点信息
+   - 生成测试用例数据
+
+2. **API 测试生成器** (`src/features/openapi/api-test-generator.ts`)：
+   - 生成 JUnit 5 集成测试
+   - 生成 Spring Boot Test 配置
+   - 支持正向和负向测试用例
+
+3. **测试代码模板**：
+   ```java
+   @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+   class SearchMoviesControllerIntegrationTest {
+
+       @Test
+       void shouldReturnMoviesWhenValidSearchString() {
+           // 测试正常搜索场景
+       }
+
+       @Test
+       void shouldReturnErrorWhenInvalidSearchString() {
+           // 测试异常场景
+       }
+   }
+   ```
+
+4. **API 一致性验证**：
+   - 对比生成的 API 与原始 Swagger 规范
+   - 验证参数类型和响应格式
+   - 检查错误处理
+
+**验证要求**：
+- 生成的测试代码可编译运行
+- 测试覆盖主要 API 场景
+- 与原始 Swagger 规范一致
+
+请实现 API 测试生成功能。
 ```
 
-### 质量检查点
+### 提示词 5.2：性能优化和生产就绪
 
-每个阶段都包含明确的成功标准和验证步骤，确保：
-- **可验证性**：每步都有明确的验证命令和预期结果
-- **可回滚性**：出错时可以回到上一个稳定状态
-- **可重复性**：流程标准化，可在不同项目中复用
-- **可扩展性**：支持复杂项目的分阶段迁移
+```markdown
+我正在构建 Tibco BW 迁移工具，需要优化性能并准备生产部署。
 
-## 使用建议
+**当前任务**：优化工具性能和生成代码质量
 
-1. **按阶段执行**：不要跳过验证步骤
-2. **保存中间结果**：每个阶段完成后保存状态
-3. **记录问题和解决方案**：为后续项目积累经验
-4. **利用自动化**：充分使用现有的 CLI 工具功能
-5. **持续验证**：在每个关键点进行功能验证
+**要求**：
+1. **性能优化**：
+   - 并行处理多个文件
+   - 缓存解析结果
+   - 优化内存使用
+   - 增量更新支持
+
+2. **代码质量提升**：
+   ```typescript
+   // 代码生成选项
+   interface CodeGenerationOptions {
+     useJSR303Validation: boolean;
+     useLombok: boolean;
+     useJacksonAnnotations: boolean;
+     includeConstructors: boolean;
+     includeToString: boolean;
+     generateDocumentation: boolean;
+   }
+   ```
+
+3. **生产环境配置**：
+   - 环境变量支持
+   - 配置文件分离
+   - 日志级别配置
+   - 监控集成
+
+4. **部署工具** (`src/utils/deployment-helper.ts`)：
+   - Docker 配置生成
+   - Kubernetes 部署文件
+   - CI/CD 流水线配置
+
+**高级功能**：
+```bash
+# 批量转换多个项目
+tibco-cli batch-convert projects/ -o output/ -p com.company
+
+# 生成部署配置
+tibco-cli generate-deployment -t docker -o deployment/
+
+# 性能分析
+tibco-cli analyze-performance -i large-project/
+```
+
+**验证要求**：
+- 处理大型项目时性能良好
+- 生成的代码符合生产标准
+- 部署配置完整可用
+
+请实现性能优化和生产就绪功能。
+```
+
+## 学习路径建议
+
+### 🎯 **适合不同水平的学员**
+
+**初级学员**（熟悉 TypeScript/Node.js）：
+1. 从阶段 1 开始，重点学习项目架构设计
+2. 逐步实现每个解析器和生成器
+3. 重点关注代码结构和测试
+
+**中级学员**（有企业级开发经验）：
+1. 可以跳过基础架构，直接从阶段 2 开始
+2. 重点关注业务逻辑转换的复杂性
+3. 深入理解 Tibco BW 和 Spring Boot 的差异
+
+**高级学员**（有迁移工具开发经验）：
+1. 可以从阶段 3 开始，重点关注自动化流程
+2. 深入研究性能优化和错误处理
+3. 扩展工具支持更多的 Tibco BW 特性
+
+### 📚 **学习成果验证**
+
+每个阶段完成后，学员应该能够：
+- **阶段 1**：解析 XSD 文件并生成 Java 模型
+- **阶段 2**：解析 BWP 文件并生成 Spring Boot 代码
+- **阶段 3**：创建完整的 CLI 工具
+- **阶段 4**：实现测试和问题修复
+- **阶段 5**：优化工具并准备生产使用
+
+### 🔧 **实践建议**
+
+1. **渐进式开发**：每个阶段都要有可运行的代码
+2. **测试驱动**：先写测试，再实现功能
+3. **真实数据**：使用提供的示例项目进行测试
+4. **文档记录**：记录遇到的问题和解决方案
+5. **代码审查**：定期检查代码质量和架构设计
+
+这个多轮提示词设计让学员能够从零开始构建一个完整的企业级迁移工具，同时学习到遗留系统迁移的核心技术和最佳实践。
