@@ -1,184 +1,271 @@
-# TIBCO Movie Example
+# 优化的 Tibco BW 迁移 AI Workflow
 
-## 分阶段迁移模板
+## 概述
 
-### 📋 阶段 1：项目分析
+基于当前项目的成熟架构，这个优化的工作流程利用了现有的自动化功能，减少了手动步骤，提高了成功率和可验证性。
+
+## 阶段 1：项目分析与准备 (Analysis & Preparation)
+
+### 提示词模板 1.1：项目结构分析
 
 ```markdown
-我需要分析一个 Tibco BW 项目的迁移可行性。
+我正在使用一个成熟的 Tibco BW 转 Spring Boot 的 CLI 工具进行遗留系统迁移。
+
+**当前任务**：分析 Tibco BW 项目结构并制定迁移计划
 
 **项目路径**：`{TIBCO_BW_PROJECT_PATH}`
 
-请帮我：
-
-1. **结构分析**：
-   ```bash
-   # 验证 BWP 文件
-   find {TIBCO_BW_PROJECT_PATH} -name "*.bwp" -exec node dist/cli.js validate -i {} \;
-   
-   # 检查项目结构
-   node dist/cli.js auto {TIBCO_BW_PROJECT_PATH} --no-deploy --no-app-start
-   ```
-
-2. **生成分析报告**：
+**要求**：
+1. 使用 `node dist/cli.js validate -i {BWP_FILE_PATH}` 验证 BWP 文件结构
+2. 分析项目中的关键组件：
    - BWP 文件数量和复杂度
-   - XSD Schema 结构
-   - 外部依赖识别
-   - 潜在风险评估
+   - XSD Schema 文件结构
+   - 外部 API 依赖（HTTP 客户端配置）
+   - 配置文件（.substvar, .properties）
+3. 识别潜在的迁移风险点
+4. 制定分阶段迁移计划
 
-3. **制定迁移计划**：
-   - 优先级排序
-   - 分阶段策略
-   - 资源需求评估
-
-请提供详细的分析结果和建议的迁移路径。
+**成功标准**：
+- BWP 文件验证通过
+- 生成详细的项目分析报告
+- 确定迁移优先级和依赖关系
 ```
 
-### 🔧 阶段 2：核心转换
+### 提示词模板 1.2：环境准备与依赖检查
 
 ```markdown
-我已完成项目分析，现在需要执行核心转换。
+**当前任务**：准备迁移环境并验证工具链
 
-**当前状态**：项目分析完成，准备开始转换
-**目标**：生成可编译的 Spring Boot 代码
+**要求**：
+1. 验证 CLI 工具功能：`npm test`
+2. 检查 Spring Boot 模板项目状态
+3. 验证所有必要的解析器和生成器
+4. 设置输出目录和包结构
 
-请帮我：
+**验证命令**：
+```bash
+# 验证工具链
+npm run build
+npm test -- test/unit/
+npm test -- test/integration/
 
-1. **执行转换**：
-   ```bash
-   node dist/cli.js auto {TIBCO_BW_PROJECT_PATH} -p {PACKAGE_NAME} --no-app-start
-   ```
-
-2. **验证生成结果**：
-   - 检查生成的 Controller 和 Service
-   - 验证 XSD 模型类
-   - 确认 application.properties 配置
-
-3. **修复常见问题**：
-   - toString 方法问题
-   - 外部 API 配置
-   - 数据类型映射
-
-4. **编译验证**：
-   ```bash
-   cd spring-boilerplate
-   mvn compile
-   ```
-
-请确保生成的代码结构正确且能编译通过。
+# 测试自动检测功能
+node dist/cli.js auto {TIBCO_BW_PROJECT_PATH} --no-deploy --no-app-start
 ```
 
-### 🧪 阶段 3：API 测试验证
+**成功标准**：
+- 所有测试通过
+- 自动检测功能正常工作
+- Spring Boot 模板项目可编译
+```
+
+## 阶段 2：自动化转换与验证 (Automated Conversion)
+
+### 提示词模板 2.1：一键自动转换
 
 ```markdown
-我已完成代码转换，现在需要验证 API 功能。
+**当前任务**：执行完整的自动化转换流程
 
-**当前状态**：Spring Boot 代码生成完成，编译通过
-**目标**：验证 API 功能正确性
-
-请帮我：
-
-1. **生成并执行 API 测试**：
-   ```bash
-   node dist/cli.js test-api {TIBCO_BW_PROJECT_PATH} \
-     --spring-boot-project spring-boilerplate \
-     -p {PACKAGE_NAME} \
-     --port 8080
-   ```
-
-2. **验证检查点**：
-   - [ ] Spring Boot 应用启动成功
-   - [ ] API 端点响应正确
-   - [ ] 与原始 Swagger 规范一致
-   - [ ] 外部 API 调用正常
-
-3. **功能测试**：
-   ```bash
-   # 测试主要 API
-   curl "http://localhost:8080/movies?searchString=batman"
-   
-   # 验证响应格式
-   # 预期：{"search":[...],"totalResults":"613","response":"True"}
-   ```
-
-4. **问题排查**：
-   - 如果 API 返回空数据，检查外部 API 配置
-   - 如果启动失败，检查依赖和配置
-   - 如果测试失败，分析错误日志
-
-请确保所有 API 功能正常工作。
+**使用优化的自动转换命令**：
+```bash
+node dist/cli.js auto {TIBCO_BW_PROJECT_PATH} \
+  -p {PACKAGE_NAME} \
+  --port {PORT} \
+  --no-app-start
 ```
 
-## 问题解决模板
+**要求**：
+1. 让工具自动检测和转换所有组件
+2. 验证生成的代码结构和质量
+3. 检查 application.properties 配置
+4. 确认所有 XSD 模型正确生成
 
-### 🔍 配置问题诊断
+**验证检查点**：
+- [ ] BWP 文件解析成功
+- [ ] XSD 模型生成完整
+- [ ] Controller 和 Service 代码生成
+- [ ] 外部 API 客户端配置正确
+- [ ] 配置文件转换完整
+- [ ] 代码部署到 Spring Boot 项目成功
+
+**如果失败**：分析错误日志，使用 `quick` 命令进行单文件调试
+```
+
+### 提示词模板 2.2：代码质量验证与修复
 
 ```markdown
-我的 Tibco BW 迁移项目遇到配置相关问题。
+**当前任务**：验证生成代码的质量并修复问题
 
-**问题描述**：{具体问题描述}
-**错误信息**：
-```
-{错误日志}
-```
+**验证步骤**：
+1. 编译检查：`cd spring-boilerplate && mvn compile`
+2. 代码结构检查：验证包结构、类命名、方法签名
+3. 配置完整性检查：验证 application.properties 包含所有必要配置
 
-请帮我：
+**常见问题修复**：
+- toString 方法生成问题
+- 外部 API URL 配置问题
+- 参数映射错误
+- 数据类型转换问题
 
-1. **诊断问题**：
-   - 分析错误日志
-   - 检查相关配置文件
-   - 识别根本原因
+**修复策略**：
+1. 使用现有的生成器选项调整代码生成
+2. 手动修复关键配置文件
+3. 验证修复效果
 
-2. **解决方案**：
-   - 提供具体的修复步骤
-   - 更新配置文件
-   - 验证修复效果
-
-3. **预防措施**：
-   - 避免类似问题的最佳实践
-   - 配置验证方法
-
-请提供详细的解决方案和验证步骤。
+**成功标准**：
+- Spring Boot 项目编译通过
+- 所有生成的类结构正确
+- 配置文件完整且有效
 ```
 
-### 🚨 API 调用问题修复
+## 阶段 3：API 测试与验证 (API Testing & Validation)
+
+### 提示词模板 3.1：API 测试生成与执行
 
 ```markdown
-我的迁移项目中外部 API 调用有问题。
+**当前任务**：生成 API 测试并验证接口一致性
 
-**问题现象**：
-- API 返回空数据或错误
-- 外部服务调用失败
-- 参数映射不正确
-
-**当前配置**：
-- 项目路径：{TIBCO_BW_PROJECT_PATH}
-- 生成的代码路径：spring-boilerplate
-
-请帮我：
-
-1. **分析原始配置**：
-   - 检查 .substvar 文件中的 API 配置
-   - 分析 BWP 文件中的外部服务调用
-   - 验证参数映射规则
-
-2. **修复生成的代码**：
-   - 更新 application.properties
-   - 修正 Service 类中的 API 调用
-   - 调整参数映射逻辑
-
-3. **验证修复**：
-   ```bash
-   # 重新启动应用
-   cd spring-boilerplate
-   mvn spring-boot:run
-   
-   # 测试 API
-   curl "http://localhost:8080/movies?searchString=batman"
-   ```
-
-请确保外部 API 调用正常工作。
+**使用 API 测试命令**：
+```bash
+node dist/cli.js test-api {TIBCO_BW_PROJECT_PATH} \
+  --spring-boot-project spring-boilerplate \
+  -p {PACKAGE_NAME} \
+  --port {PORT}
 ```
 
+**要求**：
+1. 自动生成集成测试和单元测试
+2. 启动 Spring Boot 应用
+3. 执行 API 一致性验证
+4. 运行健康检查
 
+**验证检查点**：
+- [ ] Swagger 文件解析成功
+- [ ] API 测试代码生成
+- [ ] Spring Boot 应用启动成功
+- [ ] API 端点响应正确
+- [ ] 与原始 Swagger 规范一致
 
+**如果 API 不一致**：
+1. 检查参数映射配置
+2. 验证外部 API 客户端配置
+3. 调整 Controller 方法签名
+```
+
+### 提示词模板 3.2：端到端功能验证
+
+```markdown
+**当前任务**：执行端到端功能测试
+
+**测试场景**：
+1. 使用真实数据测试主要业务流程
+2. 验证外部 API 调用（如 OMDB API）
+3. 测试错误处理和边界情况
+4. 性能基准测试
+
+**验证命令**：
+```bash
+# 运行集成测试
+cd spring-boilerplate
+mvn test
+
+# 手动 API 测试
+curl "http://localhost:{PORT}/movies?searchString=batman"
+```
+
+**成功标准**：
+- 所有自动化测试通过
+- API 返回预期的数据结构
+- 外部 API 集成正常工作
+- 错误处理机制有效
+```
+
+## 阶段 4：部署优化与文档 (Deployment & Documentation)
+
+### 提示词模板 4.1：生产就绪优化
+
+```markdown
+**当前任务**：优化应用以适应生产环境
+
+**优化项目**：
+1. 配置管理优化（环境变量、配置文件分离）
+2. 日志配置和监控集成
+3. 安全配置（API 密钥管理、HTTPS）
+4. 性能优化（连接池、缓存）
+
+**验证部署就绪性**：
+- [ ] 配置外部化完成
+- [ ] 日志级别和格式正确
+- [ ] 健康检查端点可用
+- [ ] 安全配置到位
+- [ ] 文档完整
+
+**生成部署文档**：包括环境要求、配置说明、部署步骤
+```
+
+### 提示词模板 4.2：知识库构建与总结
+
+```markdown
+**当前任务**：构建迁移知识库和最佳实践
+
+**文档输出**：
+1. **迁移总结报告**：
+   - 转换的组件清单
+   - 遇到的问题和解决方案
+   - 性能对比数据
+   - 功能验证结果
+
+2. **运维手册**：
+   - 部署指南
+   - 配置管理
+   - 故障排除
+   - 监控和维护
+
+3. **开发者指南**：
+   - 代码结构说明
+   - API 文档
+   - 扩展开发指南
+
+4. **FAQ 和最佳实践**：
+   - 常见问题解决方案
+   - 迁移最佳实践
+   - 工具使用技巧
+
+**知识库验证**：确保文档完整、准确、可操作
+```
+
+## 工作流程控制
+
+### 错误处理策略
+
+```markdown
+**当遇到错误时**：
+1. **分析错误类型**：解析错误、生成错误、部署错误、运行时错误
+2. **使用诊断命令**：
+   - `node dist/cli.js validate -i {BWP_FILE}`
+   - `npm test -- test/unit/{相关测试}`
+   - 查看详细日志和错误堆栈
+3. **分步调试**：使用 `quick` 命令单独测试组件
+4. **回滚策略**：保持工作版本，增量修复
+
+**常见错误模式**：
+- 外部 API URL 配置错误 → 检查 .substvar 文件转换
+- 数据类型映射错误 → 验证 XSD 解析结果
+- 依赖注入问题 → 检查 Spring 注解生成
+```
+
+### 质量检查点
+
+每个阶段都包含明确的成功标准和验证步骤，确保：
+- **可验证性**：每步都有明确的验证命令和预期结果
+- **可回滚性**：出错时可以回到上一个稳定状态
+- **可重复性**：流程标准化，可在不同项目中复用
+- **可扩展性**：支持复杂项目的分阶段迁移
+
+## 使用建议
+
+1. **按阶段执行**：不要跳过验证步骤
+2. **保存中间结果**：每个阶段完成后保存状态
+3. **记录问题和解决方案**：为后续项目积累经验
+4. **利用自动化**：充分使用现有的 CLI 工具功能
+5. **持续验证**：在每个关键点进行功能验证
