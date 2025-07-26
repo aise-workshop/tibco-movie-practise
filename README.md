@@ -1,23 +1,8 @@
-# 从零构建 Tibco BW 迁移 CLI 工具的提示词
+# 使用 AI 助手众零构建 Tibco BW 迁移 CLI 工具练习
 
 ## 学习目标
 
 通过多轮提示词练习，学员将从零开始构建一个完整的 Tibco BW 到 Spring Boot 的迁移 CLI 工具。
-
-## 示例项目结构
-
-学员将基于以下示例项目进行练习：
-```
-test/_fixtures/MovieApi_Final_withConsul/
-├── MovieCatalogSearch.module/
-│   ├── Processes/moviecatalogsearch/module/SearchMovies.bwp
-│   ├── Schemas/
-│   │   ├── MovieCatalogMaster.xsd
-│   │   └── OMDBSearchElement.xsd
-│   └── Resources/swagger.json
-└── META-INF/
-    └── default.substvar
-```
 
 ## 阶段 1：项目初始化和基础解析器
 
