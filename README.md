@@ -1,4 +1,4 @@
-# 使用 AI 助手众零构建 Tibco BW 迁移 CLI 工具练习
+# 使用 AI 助手从零构建 Tibco BW 迁移 CLI 工具练习
 
 ## 学习目标
 
