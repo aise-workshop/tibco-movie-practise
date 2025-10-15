@@ -1,5 +1,7 @@
 # 使用 AI 助手从零构建 Tibco BW 迁移 CLI 工具练习
 
+[English README](README_EN.md)
+
 ## 学习目标
 
 通过多轮提示词练习，学员将从零开始构建一个完整的 Tibco BW 到 Spring Boot 的迁移 CLI 工具。
