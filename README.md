@@ -1,6 +1,6 @@
 # 使用 AI 助手从零构建 Tibco BW 迁移 CLI 工具练习
 
-[English README](README_EN.md)
+> **English Version**: For English documentation, please refer to [README_EN.md](README_EN.md)
 
 ## 学习目标
 
